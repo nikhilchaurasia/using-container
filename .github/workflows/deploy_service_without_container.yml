@@ -1,5 +1,8 @@
-name: Deployment (Container)
-on:
+# If we are not using containers make some changes to the workflow
+# 1. We need to add cluser address to 127:0.0.1:27017
+# 2. We need to open the port in service tab
+name: Deployment (Service containers)
+on: 
   push:
     branches:
       - main
@@ -11,17 +14,17 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
-    container: 
-      image: node:trixie-slim
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
     services:
       mongodb:
         image: mongo
+        ports:
+          - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
